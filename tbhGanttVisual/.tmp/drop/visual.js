@@ -1,15 +1,475 @@
 var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ 809:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "U": () => (/* binding */ toPxNumber),
+/* harmony export */   "px": () => (/* binding */ px)
+/* harmony export */ });
+/* unused harmony export roundOptions */
+//library of helper functions
+/**
+ * Converts a number into a string with the units 'px' suffixed on it.
+ * @param pixels the number of pixels
+ * @returns the string representation of the number with 'px' suffixed
+ */
+function px(pixels) {
+    return pixels.toString().concat('px');
+}
+/**
+ * For now this doesnt work and because the return value never comes back... keep this in visual.ts for now
+ * Returns the number representation of a CSS measurement with pixel units.
+ * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
+ * @returns the number of pixels specified
+ */
+function toPxNumber(numberPx) {
+    //if there is only one instance of 'px' and its at the end
+    if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
+        && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
+        return +numberPx.substring(0, numberPx.length - 2);
+    }
+    else {
+        //otherwise return null since css can have negative, 0, or positive values
+        return null;
+    }
+}
+/**
+ * Returns a number rounded up, down, or not at all, to the nearest integer.
+ * @param x The number to round.
+ * @param round Rounds x to the nearest integer. Rounds up if > 0, does not round if == 0, rounds down otherwise.
+ * @returns The number rounded as specified.
+ */
+function roundOptions(x, round) {
+    if (round > 0) {
+        return Math.ceil(x);
+    }
+    else if ((round == 0) || (round == undefined)) {
+        return x;
+    }
+    else {
+        return Math.floor(x);
+    }
+}
+
+
+/***/ }),
+
+/***/ 4734:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Eg": () => (/* binding */ isLeapYear),
+/* harmony export */   "jl": () => (/* binding */ remainingDaysInYear),
+/* harmony export */   "qj": () => (/* binding */ daysPerMonth),
+/* harmony export */   "rD": () => (/* binding */ totalDaysPerYear),
+/* harmony export */   "ti": () => (/* binding */ daysElapsedInYear)
+/* harmony export */ });
+/* unused harmony exports monthArray, mmm, m, millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, remainingDaysInMonth, daysElapsedInMonth, epoch0, daysBetween, monthsBetween, yearsBetween */
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9665);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
+//A header lib for date and time fns
+
+
+////////////////////////////////////////////////////////////////
+//  CONSTANTS
+////////////////////////////////////////////////////////////////
+const monthArray = (/* unused pure expression or super */ null && ([
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+]));
+const mmm = (/* unused pure expression or super */ null && ([
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+]));
+const m = (/* unused pure expression or super */ null && ([
+    'J',
+    'F',
+    'M',
+    'A',
+    'M',
+    'J',
+    'J',
+    'A',
+    'S',
+    'O',
+    'N',
+    'D'
+]));
+const daysPerMonth = [
+    31,
+    28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31
+];
+const millisPerSecond = 1000;
+const secondsPerMinute = 60;
+const minutesPerHour = 60;
+const hoursPerDay = 24;
+const daysPerWeek = 7;
+const monthsPerYear = 12;
+/**
+ * The number of days in a non-leap year.
+ */
+const daysPerYear = 365;
+////////////////////////////////////////////////////////////////
+//  YEAR TO DAYS
+////////////////////////////////////////////////////////////////
+/**
+ * Returns the number of days in the specified year accounting for leap years.
+ * @param year the year to count the days.
+ */
+function totalDaysPerYear(year) {
+    let y = Math.floor(year); //convert to whole number
+    if (isLeapYear(y)) {
+        return 366;
+    }
+    else {
+        return 365;
+    }
+}
+function remainingDaysInYear(d) {
+    return dayjs__WEBPACK_IMPORTED_MODULE_0__(new Date(d.year() + 1, 0, 1)).diff(d, 'd', true);
+}
+function daysElapsedInYear(d) {
+    return d.diff(dayjs__WEBPACK_IMPORTED_MODULE_0__(new Date(d.year(), 0, 1)), 'd', true);
+}
+function remainingDaysInMonth(d) {
+    return dayjs(new Date(d.year(), d.month() + 1, 1)).diff(d, 'd', true);
+}
+function daysElapsedInMonth(d) {
+    return d.diff(dayjs(new Date(d.year(), d.month(), 1)), 'd', true);
+}
+////////////////////////////////////////////////////////////////
+//  SUPPORT FUNCTIONS
+////////////////////////////////////////////////////////////////
+function epoch0() {
+    return new Date(1970, 1, 1);
+}
+/**
+ * Is the year a leap year?
+ * @param year Gregorian and prolaptic Gregorian BCE calendar with defined 0 year.
+ * @returns If the year is a leap year.
+ */
+function isLeapYear(year) {
+    return (Math.abs(year) % 4 == 0 && Math.abs(year) % 100 !== 0) || (Math.abs(year) % 400 == 0);
+}
+/**
+ * Returns the number of days in the epoch timeline between two dates.
+ * @param start The start date.
+ * @param end The end date.
+ * @param round Rounds the number of days to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
+ * @returns the number of days between the two dates rounded down.
+ */
+function daysBetween(start, end, round) {
+    if (round > 0) {
+        return Math.ceil((end.valueOf() - start.valueOf()) / (millisPerSecond *
+            secondsPerMinute *
+            minutesPerHour *
+            hoursPerDay));
+    }
+    else if ((round == 0) || (round == undefined)) {
+        return (end.valueOf() - start.valueOf()) / (millisPerSecond *
+            secondsPerMinute *
+            minutesPerHour *
+            hoursPerDay);
+    }
+    else {
+        return Math.floor((end.valueOf() - start.valueOf()) / (millisPerSecond *
+            secondsPerMinute *
+            minutesPerHour *
+            hoursPerDay));
+    }
+}
+/**
+ * Returns the number of months between two dates. TODO ROUND OPTIONS
+ * @param start The start date.
+ * @param end The end date.
+ * @param round Rounds the number of months to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
+ * @returns the number of days between the two dates rounded down.
+ */
+function monthsBetween(start, end, round) {
+    //let t: number = end.valueOf() - start.valueOf();
+    let m = [start.getMonth(), end.getMonth()];
+    //if they are in the same month
+    if (m[0] == m[1]) {
+        if (isLeapYear(start.getFullYear()) && m[0] == 1) { //we are in a leap february
+            return roundOptions((daysPerMonth[m[0]] + 1) *
+                ((end.valueOf() - start.valueOf()) /
+                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay)), round);
+        }
+        else {
+            return roundOptions(daysPerMonth[m[0]] *
+                ((end.valueOf() - start.valueOf()) /
+                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay)), round);
+        }
+    }
+    //if they are in the same year
+    if (yearsBetween(start, end, 0) < 1) {
+        //proportion of first month
+        let t = monthsBetween(start, new Date(start.getFullYear(), start.getMonth() + 1, 1, 0, 0, 0, 0), 0);
+        //guard clause check that our for loop will run more then once
+        if (m[1] - m[0] == 1) { //we only have one more month left, add the proportion of the second month
+            return roundOptions(t + monthsBetween(end, new Date(end.getFullYear(), end.getMonth() + 1, 1, 0, 0, 0, 0), 0), round);
+        }
+        //there are more than 2 months left
+        //sum from the second month onwards to the second to last month
+        for (let i = m[0] + 1; i < m[1] - 1; i++) {
+            t += daysPerMonth[i];
+        }
+        //return and add the last proportion of the last month
+        return roundOptions(t + monthsBetween(new Date(end.getFullYear(), end.getMonth() + 1, 1, 0, 0, 0, 0), end, 0), round);
+    }
+    //they are not in the same year
+    //get the year number difference and proceed like with the above if statement
+    //the months between now and the end of the year
+    let t = monthsBetween(start, new Date(start.getFullYear() + 1, 0, 1, 0, 0, 0, 0));
+    let y = [end.getFullYear(), start.getFullYear()];
+    //if there are only 2 years spanned
+    if (y[1] - y[0] == 1) {
+        //add the time between the start of the last year and the end date
+        return roundOptions(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0), round);
+    }
+    //there are more than 2 years left
+    t += ((m[1] - m[0]) - 2) * 12; //ignore the start and end years
+    //return and add the proportion of the last year
+    return roundOptions(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0), round);
+}
+/**
+ * Returns the number of years between two dates. NOT FULLY IMPLEMENTED
+ * @param start The start date.
+ * @param end The end date.
+ * @param round Rounds the number of years to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
+ * @returns the number of days between the two dates rounded down.
+ */
+function yearsBetween(start, end, round) {
+    //TODO get partial years
+    return roundOptions(end.getFullYear() - start.getFullYear(), round);
+}
+// export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {
+//     //todo
+//     return 0;
+// }
+//BADLY NAMED
+// export function date(dayIndex: number): string {
+//     return '0000-00-00T00:00:00';
+// }
+// export function year(dayIndex: number): number {
+//     var deltaYears = Math.floor(dayIndex / totalDaysPerYear(2001));
+//     return 1970 + Math.floor(dayIndex / totalDaysPerYear(2001));
+// }
+// export function month(dayIndex: number): string {
+//     return '0000-00-00T00:00:00';
+// }
+// export function day(dayIndex: number): string {
+//     return '0000-00-00T00:00:00';
+// }
+
+
+/***/ }),
+
+/***/ 1092:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TY": () => (/* binding */ Timeline)
+/* harmony export */ });
+/* unused harmony exports YearSeparator, MonthSeparator, TimeScale */
+/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4734);
+//Class that contains properties and functions that deal with timeline and Offset
+
+class Timeline {
+    ////////////////////////////////////////////////////////////////
+    //  Constructor
+    ////////////////////////////////////////////////////////////////
+    constructor(start, end) {
+        ////////////////////////////////////////////////////////////////
+        //  Define members
+        ////////////////////////////////////////////////////////////////
+        //--------DEV--------//
+        this.verbose = true;
+        var isLeapYear = __webpack_require__(5709);
+        //check which date is larger and round to nearest day
+        if (start > end) {
+            this.d1 = end.startOf('d');
+            this.d2 = start.endOf('d');
+        }
+        else {
+            this.d1 = start.startOf('d');
+            this.d2 = end.endOf('d');
+        }
+        this.n_days = this.d2.diff(this.d1, 'd', true);
+        this.n_months = this.d2.diff(this.d1, 'M', true);
+        this.n_years = this.d2.diff(this.d1, 'y', true);
+        // this.span_days;
+        // this.span_months;
+        this.span_years = this.d2.year() - this.d1.year() + 1;
+        this.padding = 5;
+        this.dayScale = 1;
+        if (this.verbose) {
+            console.log('LOG: Timeline created from ' +
+                this.d1.toISOString() + ' to ' +
+                this.d2.toISOString() +
+                ' spanning ' +
+                this.n_days.toString() +
+                ' days.');
+            console.log('LOG: ' +
+                this.n_years + ' years or ' +
+                this.n_months + ' months or ' +
+                this.n_days + ' days.');
+            console.log('LOG: Timeline scale = ' + this.dayScale.toString());
+        }
+        this.ts = new TimeScale();
+        console.log('Created TimeScale ts');
+        this.generateYears();
+        //console.log(this.ts.yearText);
+    }
+    ////////////////////////////////////////////////////////////////
+    //  Get/Set
+    ////////////////////////////////////////////////////////////////
+    getStart() { return this.d1; }
+    getEnd() { return this.d2; }
+    getDays() { return this.n_days; }
+    getDayScale() { return this.dayScale; }
+    getMonths() { return this.n_months; }
+    getYears() { return this.n_years; }
+    getTimeScale() { return this.ts; }
+    getPadding() { return this.padding; }
+    ////////////////////////////////////////////////////////////////
+    //  Timeline Manipulation Functions
+    ////////////////////////////////////////////////////////////////
+    /**
+     * Not yet implemented
+     * @param daysPerPixel the desired scale factor
+     */
+    setDayScale(daysPerPixel) {
+        console.log("WARNING: Timeline.setDayScale(daysPerPixel: number) Not yet implemented.");
+        this.dayScale = daysPerPixel;
+        this.updateScaleFactors();
+    }
+    generateYears() {
+        let cumulativeOffset = 0;
+        let proportion;
+        console.log(this.span_years.toString());
+        if (this.span_years == 0) { //same year, return year
+            return [new YearSeparator(this.d1.year().toString(), 0)];
+        }
+        for (let i = 0; i < this.span_years; i++) {
+            console.log('i = ' + i);
+            //check if we are considering the first or last year and calc the pproportion of the section we want
+            if (i == 0) { //this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
+                //console.log(this.d1.format());
+                //console.log(dayjs(new Date(this.d1.year() + 1, 0, 1)));
+                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1);
+                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year());
+                console.log(proportion);
+            }
+            else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
+                console.log(this.d2.format());
+                console.log(_src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2).toString());
+                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2);
+                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d2.year());
+                console.log(proportion);
+            }
+            else {
+                proportion = 1;
+                console.log(proportion);
+            }
+            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
+            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale * proportion;
+        }
+        console.log(this.ts.yearScale);
+    }
+    generateMonths() {
+        let cumulativeOffset = 0;
+        for (let i = 0; i < Math.ceil(this.getYears()); i++) {
+            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale;
+            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
+        }
+    }
+    ////////////////////////////////////////////////////////////////
+    //  Support Functions
+    ////////////////////////////////////////////////////////////////
+    updateScaleFactors() {
+        this.weekScale = this.dayScale * 7;
+        this.yearScale = this.dayScale * 365;
+        for (let i = 0; i < 12; i++) {
+            this.monthScale[i] = this.dayScale[i] * _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysPerMonth */ .qj[i];
+        }
+        this.quarterScale[0] = this.monthScale[0] + this.monthScale[1] + this.monthScale[2];
+        this.quarterScale[1] = this.monthScale[3] + this.monthScale[4] + this.monthScale[5];
+        this.quarterScale[2] = this.monthScale[6] + this.monthScale[7] + this.monthScale[8];
+        this.quarterScale[3] = this.monthScale[9] + this.monthScale[10] + this.monthScale[11];
+    }
+}
+class YearSeparator {
+    constructor(yearText, yearOffset) {
+        this.yearText = yearText;
+        this.yearOffset = yearOffset;
+    }
+}
+class MonthSeparator {
+    constructor(monthText, monthOffset) {
+        this.monthText = monthText;
+        this.monthOffset = monthOffset;
+    }
+}
+class TimeScale {
+    constructor() {
+        this.yearScale = [];
+        this.monthScale = [];
+    }
+}
+
+
+/***/ }),
 
 /***/ 8104:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(809);
+/* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1092);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9665);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _tests_globalTests__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6748);
 /*
 *  Power BI Visual CLI
 *
@@ -36,13 +496,27 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 *  THE SOFTWARE.
 */
 
+////////////////////////////////////////////////////////////////
+//  Imports
+////////////////////////////////////////////////////////////////
 
 
+
+
+
+//UNIT TESTS
+
+////////////////////////////////////////////////////////////////
+//  Begin class definition
+////////////////////////////////////////////////////////////////
 class Visual {
+    ////////////////////////////////////////////////////////////////
+    //  Constructor
+    ////////////////////////////////////////////////////////////////
     constructor(options) {
+        _tests_globalTests__WEBPACK_IMPORTED_MODULE_3__/* .allTests */ .T();
         console.log('Visual constructor', options);
-        this.rows = 5;
-        this.cols = 3;
+        this.style = getComputedStyle(document.querySelector(':root'));
         //     this.target = options.element;
         //     this.updateCount = 0;
         //     if (document) {
@@ -55,112 +529,215 @@ class Visual {
         //         this.target.appendChild(new_p);
         //      }
         // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
-        //////// BODY
-        //Assigns the first (and only) html element to this.body and then appends a div
+        ////////////////////////////////////////////////////////////////
+        //  Create body level child elements
+        ////////////////////////////////////////////////////////////////
+        //the header including title, logos etc
         this.divHeader = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
-            .attr('id', 'div-header');
-        this.divHeader.append('h4')
+            .attr('id', 'div-header')
+            .append('h4')
             .text('Header (include space for title, legend & logos');
+        //structure of the content below the header
         this.statusAndContent = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
             .attr('id', 'div-statusAndContent');
-        //////// STATUSANDCONTENT
-        this.divTATH = this.statusAndContent
+        ////////////////////////////////////////////////////////////////
+        //  Create elements under the header
+        ////////////////////////////////////////////////////////////////
+        //"header of the gantt chart" containing the activity field headers and timeline
+        this.divTimelineAndActivitiesH = this.statusAndContent
             .append('div')
-            .attr('id', 'div-timelineAndTasksHeader');
+            .attr('id', 'div-timelineAndActivitiesHeader');
+        //div to contain the act table and chart
         this.divContent = this.statusAndContent
             .append('div')
             .attr('id', 'div-content');
+        //overlapping div to contain the status line
         this.divStatusLine = this.statusAndContent
             .append('div')
-            .attr('id', 'div-statusLine')
-            .attr('class', 'highlight');
-        this.divTasks;
-        ////////TIMELINEANDTASKSHEADER
-        //////// CONTENT
-        this.divTasks = this.divContent
+            .attr('id', 'div-statusLine');
+        ////////////////////////////////////////////////////////////////
+        //  Create content elements
+        ////////////////////////////////////////////////////////////////
+        //div to hold the activity data in a table
+        this.divActivities = this.divContent
             .append('div')
-            .attr('id', 'div-tasks');
+            .attr('id', 'div-activities');
+        //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.divContent
             .append('div')
             .attr('id', 'div-chartContainer');
+        //the structure layer of the chart (grid, shading)
         this.divStructureLayer = this.divChartContainer
             .append('div')
             .attr('class', 'gridStack')
             .attr('id', 'div-structureLayer');
+        //the svg layer  of the chart (bars, links)
         this.divSvgLayer = this.divChartContainer
             .append('div')
             .attr('class', 'gridStack')
             .attr('id', 'div-svgLayer');
-        this.divTimeline = this.divTATH
+        //div in the header that contains the timeline and table header (separate for scrolling purposes)
+        this.divTimelineAndActivitiesH.append('table')
+            .attr('id', 'table-activityHeader')
+            .append('th')
+            .text("Activity Header");
+        //the div containing the timeline svgs
+        this.divTimeline = this.divTimelineAndActivitiesH
             .append('div')
             .attr('id', 'div-timeline');
+        //the div that needs more justification for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
-            .attr('id', 'div-chart');
-        //https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
+            .attr('id', 'div-chart')
+            .attr('class', 'highlight');
+        ////////////////////////////////////////////////////////////////
+        //  Create svg timeline
+        ////////////////////////////////////////////////////////////////
+        //temp vars to be calcd later
+        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 4, 6));
+        let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 9, 12));
+        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
+        let padding = this.timeline.getPadding();
+        // let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
+        let tlWidth = this.timeline.getDays() * this.timeline.getDayScale(); //cannot be less than div width!
+        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_4__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
+        let tl = this.divTimeline
+            .append('svg')
+            .attr('id', 'tl-top')
+            .attr('height', '100%')
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlWidth));
+        let gTop = tl.append('g')
+            .classed('g-tl', true);
+        let gBottom = tl.append('g')
+            .classed('g-tl', true);
+        let ts = this.timeline.getTimeScale();
+        //var self = this; //access local var in function (d) callback
+        gTop.selectAll('text')
+            .data(ts.yearScale)
+            .enter()
+            .append('text')
+            .attr('x', function (d) {
+            console.log(d);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset + padding);
+        })
+            .attr('y', '0px')
+            .text(function (d) { return d.yearText; })
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline', 'hanging')
+            .attr('fill', '#111111')
+            .classed('yearText', true);
+        gTop.selectAll('line').data(ts.yearScale).enter().append('line')
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset); })
+            .attr('y1', '0px')
+            .attr('x2', function (d) {
+            console.log(d);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset);
+        })
+            .attr('y2', tlHeight)
+            .attr('style', 'stroke:black');
+        // gTop.append('text')
+        //     .attr('x', '100px')
+        //     .attr('y', '0px')
+        //     .text(Time.year(endDay).toString())
+        //     .attr('text-anchor', 'top')
+        //     .attr('alignment-baseline', 'hanging')
+        //     .attr('fill', '#111111');
+        // console.log(Lib.px(tlHeight / 2));
+        // gBottom.append('text')
+        //     .attr('x', '0px')
+        //     .attr('y', Lib.px(tlHeight / 2))
+        //     .text('dd-mm')
+        //     .attr('text-anchor', 'top')
+        //     .attr('alignment-baseline', 'hanging')
+        //     .attr('fill', '#111111');
+        // egsvg.append('rect')
+        //     .classed('activityBar', true)
+        //     .attr('height', '100%')
+        //     .attr('width', '100%')
+        //     .attr('x', '0px')
+        //     .attr('y', '0px')
+        //     .attr('rx', '3px')
+        //     .attr('ry', '3px');
+        ////////////////////////////////////////////////////////////////
+        //  Create #table-activities
+        ////////////////////////////////////////////////////////////////
+        // https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
         // https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js/33809812#33809812
         // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
-        this.tasksTable = this.divTasks
+        this.activityTable = this.divActivities
             .append('table')
-            .attr('id', 'table-tasks').append('tr');
-        // for (let i = 0; i < 5; i++) {
-        //     this.tasksTable.append('tr').attr('class', 'row');
-        // }
-        let keys = ['a', 'b'];
-        let values1 = ['c', 'd', 'e', 'f', 'g'];
-        let values2 = ['e', 'f'];
-        d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#table-tasks')
-            .selectAll('tr')
-            .data(values1)
-            .enter()
-            .append('td')
-            .text(function (d, i) {
-            console.log('d:' + d + ',i:' + i);
-            return d;
-        }); //why does this append tds after tr? should be in tr.
-        //this.createTasksTable(null, this.divTasks);
+            .attr('id', 'table-activities');
+        let keys = ['Activity A', '01/03/22', '25/06/22'];
+        let values1 = ['Activity B', '01/03/22', '25/06/22'];
+        let values2 = ['Activity C', '01/03/22', '25/06/22'];
+        let values3 = ['Activity D', '01/03/22', '25/06/22'];
+        let values4 = ['Activity E', '01/03/22', '25/06/22'];
+        let values5 = ['Activity F', '01/03/22', '25/06/22'];
+        let values6 = ['Activity G', '01/03/22', '25/06/22'];
+        let myData = [keys, values1, values2, values3, values4, values5, values6];
+        this.populateActivityTable(myData, null, 'table-activities');
+        ////////////////////////////////////////////////////////////////
+        //  Prepare for chart drawing
+        ////////////////////////////////////////////////////////////////
+        //find the dimensions of the containers. Specifically the timeline and svg area.
+        let timelineWidth = this.divSvgLayer.node().getBoundingClientRect().width;
+        let timelineHeight = this.divSvgLayer.node().getBoundingClientRect().height;
+        let chartWidth = this.divChart.node().getBoundingClientRect().width;
+        let chartHeight = this.divChart.node().getBoundingClientRect().height;
+        let rowHeight = this.style.getPropertyValue('--rowHeight');
+        let bars = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-chart')
+            .append('g')
+            .append('svg')
+            .attr('id', 'svg-bars');
+        bars.append('rect')
+            .classed('activityBar', true)
+            .attr('height', rowHeight)
+            .attr('width', '90px')
+            .attr('x', '0px')
+            .attr('y', '0px')
+            .attr('rx', '3px')
+            .attr('ry', '3px');
+        bars.append('rect')
+            .classed('activityBar', true)
+            .attr('height', rowHeight)
+            .attr('width', '50px')
+            .attr('x', '100px')
+            .attr('y', rowHeight)
+            .attr('rx', '3px')
+            .attr('ry', '3px');
+        bars.append('rect')
+            .classed('activityBar', true)
+            .attr('height', rowHeight)
+            .attr('width', '50px')
+            .attr('x', '80px')
+            .attr('y', '80px')
+            .attr('rx', '3px')
+            .attr('ry', '3px');
+        ////////////////////////////////////////////////////////////////
+        //  Draw chart
+        ////////////////////////////////////////////////////////////////
         //also put this in a fn later for update()
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
         // https://stackoverflow.com/questions/24534988/d3-get-the-bounding-box-of-a-selected-element
-        this.divSvgLayer.append('svg')
+        this.divStatusLine.append('svg')
             .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
             .append('line')
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-svgLayer')
-            .node()
+            .attr('y2', d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-statusLine').node()
             .getBoundingClientRect()
             .height
             .toString()
             .concat('px'))
             .attr('transform', 'translate(30)');
-        //this.divTasks.append(this.tasksTable);
     }
-    /*
-    * Returns a <table> element based on the Activities from the DataView.
-    * Returns an empty table if options is null.
-    */
-    createTasksTable(options, divTasks) {
-        if (options == null) {
-            console.log('LOG: createTasksTable called with a null VisualUpdateOptions.');
-            let tableRow;
-            let tableData;
-            tableData.text('null');
-            for (let i = 0; i < this.rows; i++) {
-                divTasks.append('tr').append('td').insert('td').insert('td').insert('td').insert('td');
-            }
-            console.log('LOG: createTasksTable called with a some number of rows.');
-            //return table;
-        }
-    }
-    createTaskRow(taskData) {
-    }
+    //on update...
     update(options) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         console.log('Visual update', options);
@@ -168,6 +745,7 @@ class Visual {
         //     this.textNode.textContent = (this.updateCount++).toString();
         // }
         let dataView = options.dataViews[0];
+        options.dataViews[0].metadata.columns.entries;
         // let width: number = options.viewport.width;
         // let height: number = options.viewport.height;
         // this.svg.attr('width', width);
@@ -198,6 +776,153 @@ class Visual {
         //     .attr('text-anchor', 'middle')
         //     .style('font-size', fontSizeLabel + 'px');
     }
+    /*
+    * Returns a <table> element based on the Activities from the DataView.
+    * Returns an empty table if options is null.
+    * TODO change this to a d3 arg
+    */
+    populateActivityTable(data, headerID, tableID) {
+        //check number of data elements and number of tr and tds to determine
+        //whether to enter(), update() or exit()
+        if (data == null) {
+            console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.');
+        }
+        //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+        //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
+        //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
+        //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+        console.log('LOG: populateActivityTable called with some number of rows.');
+        //create the number of trs required.
+        var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#' + tableID) //select the table
+            .selectAll('tr') //select all tr elements (which there are none)
+            .data(data) //select every array element of array myData (there are 7). DATA IS NOW BOUND TO TRs
+            .enter() //since we have 0 trs and 7 elements in myData, we stage 7 references
+            .append('tr'); //append a tr to each reference
+        var v = tr.selectAll('td') //select all tds, there are 0
+            .data(function (d) { return d; }) //THIS DATA COMES FROM THE TR's _data_ PROPERTY
+            .enter()
+            .append('td')
+            .text(function (d) { return d; }); //we are taking d from the bound data from the trs
+        // .attr('class','style'+d.wbsIndex);
+    }
+    getYearTextSpacing(start, end) {
+        return [0];
+    }
+}
+
+
+/***/ }),
+
+/***/ 6748:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "T": () => (/* binding */ allTests)
+/* harmony export */ });
+/* harmony import */ var _tests_test_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1473);
+//all unit tests
+
+function allTests() {
+    _tests_test_time__WEBPACK_IMPORTED_MODULE_0__/* .runUnitTests */ .RS(true);
+}
+
+
+/***/ }),
+
+/***/ 1473:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RS": () => (/* binding */ runUnitTests)
+/* harmony export */ });
+/* unused harmony exports test_totalDaysPerYear, test_isLeapYear, test_totalDaysPeryear */
+/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4734);
+//Unit tests for time.ts
+
+/**
+ * Runs unit tests for the file src/time.ts.
+ * @param verbose Console shows verbose output if true
+ * @returns The proportion of successful tests to failed tests
+ */
+function runUnitTests(verbose) {
+    let total = 0;
+    let passed = 0;
+    ////////////////////////////////////////////////////////////////
+    //total++;
+    //passed += test_totalDaysPerYear();
+    total++;
+    if (test_isLeapYear(true) == 1) {
+        passed++;
+    }
+    ;
+    total++;
+    if (test_totalDaysPerYear(true) == 1) {
+        passed++;
+    }
+    ;
+    ////////////////////////////////////////////////////////////////
+    console.log('LOG: The file /src/time.ts passed ' +
+        passed.toString() +
+        ' unit tests out of ' +
+        total.toString() +
+        ' unit tests. Pass rate: ' +
+        (100 * passed / total).toString() + '%');
+    return passed / total;
+}
+////////////////////////////////////////////////////////////////
+// TESTS
+////////////////////////////////////////////////////////////////
+//example
+function test_totalDaysPerYear(verbose) {
+    return 0;
+}
+function test_isLeapYear(verbose) {
+    let total = 0;
+    let passed = 0;
+    ////////////////////////////////////////////////////////////////
+    let testArgs = [0, 1, 4, 1900, 2000, 2100, 2022, 2024, -1, -4, -400, -100, -69];
+    let testAns = [true, false, true, false, true, false, false, true, false, true, true, false, false];
+    for (let i = 0; i < testArgs.length; i++) {
+        console.log('TESTCASE: year = ' + testArgs[i].toString());
+        if (verbose) {
+            console.log('RESULT: ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .isLeapYear */ .Eg(testArgs[i]));
+        }
+        total++;
+        if (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .isLeapYear */ .Eg(testArgs[i]) == testAns[i]) {
+            passed++;
+            console.log("PASSED");
+        }
+        else {
+            console.log("FAILED");
+        }
+    }
+    ////////////////////////////////////////////////////////////////
+    return passed / total;
+}
+function test_totalDaysPeryear(verbose) {
+    let total = 0;
+    let passed = 0;
+    ////////////////////////////////////////////////////////////////
+    let testArgs = [2, 4, 2000, 2001, -1, -4];
+    let testAns = [365, 366, 366, 365, 365, 366];
+    for (let i = 0; i < testArgs.length; i++) {
+        console.log('TESTCASE: year = ' + testArgs[i].toString());
+        if (verbose) {
+            console.log('RESULT: ' + Time.totalDaysPerYear(testArgs[i]));
+        }
+        total++;
+        if (Time.totalDaysPerYear(testArgs[i]) == testAns[i]) {
+            passed++;
+            console.log("PASSED");
+        }
+        else {
+            console.log("FAILED");
+        }
+    }
+    ////////////////////////////////////////////////////////////////
+    return passed / total;
 }
 
 
@@ -206,6 +931,7 @@ class Visual {
 /***/ 4792:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports slice, map */
 var array = Array.prototype;
 
@@ -218,6 +944,7 @@ var map = array.map;
 /***/ 1077:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -231,6 +958,7 @@ var map = array.map;
 /***/ 4355:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports bisectRight, bisectLeft */
 /* harmony import */ var _ascending__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1077);
 /* harmony import */ var _bisector__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9173);
@@ -248,6 +976,7 @@ var bisectLeft = ascendingBisect.left;
 /***/ 9173:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -292,6 +1021,7 @@ function ascendingComparator(f) {
 /***/ 902:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4792);
 /* harmony import */ var _bisect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4355);
 /* harmony import */ var _ticks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7614);
@@ -377,6 +1107,7 @@ function ascendingComparator(f) {
 /***/ 91:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _bisect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4355);
 /* harmony import */ var _histogram__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(902);
 /* harmony import */ var _threshold_freedmanDiaconis__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4081);
@@ -415,6 +1146,7 @@ function ascendingComparator(f) {
 /***/ 4081:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4792);
 
 
@@ -432,6 +1164,7 @@ function ascendingComparator(f) {
 /***/ 7614:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports tickIncrement, tickStep */
 var e10 = Math.sqrt(50),
     e5 = Math.sqrt(10),
@@ -491,6 +1224,7 @@ function tickStep(start, stop, count) {
 /***/ 4844:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony export slice */
 var slice = Array.prototype.slice;
 
@@ -500,6 +1234,7 @@ var slice = Array.prototype.slice;
 /***/ 7953:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports axisTop, axisRight, axisBottom, axisLeft */
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4844);
 
@@ -683,6 +1418,7 @@ function axisLeft(scale) {
 /***/ 9216:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _axis__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7953);
 
 
@@ -692,6 +1428,7 @@ function axisLeft(scale) {
 /***/ 514:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports brushSelection, brushX, brushY */
 /* harmony import */ var d3_transition__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2263);
 
@@ -1292,6 +2029,7 @@ function brush(dim) {
 /***/ 4697:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _brush_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(514);
 
 
@@ -1301,6 +2039,7 @@ function brush(dim) {
 /***/ 2533:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony export slice */
 var slice = Array.prototype.slice;
 
@@ -1310,6 +2049,7 @@ var slice = Array.prototype.slice;
 /***/ 8682:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9273);
 
@@ -1440,6 +2180,7 @@ function compareValue(compare) {
 /***/ 8860:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _chord__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8682);
 /* harmony import */ var _ribbon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(146);
 
@@ -1451,6 +2192,7 @@ function compareValue(compare) {
 /***/ 9273:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports cos, sin, pi, halfPi, tau, max */
 var cos = Math.cos;
 var sin = Math.sin;
@@ -1465,6 +2207,7 @@ var max = Math.max;
 /***/ 146:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2533);
 /* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9273);
 
@@ -1561,6 +2304,7 @@ function defaultEndAngle(d) {
 /***/ 2300:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _nest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9226);
 /* harmony import */ var _set__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7719);
 /* harmony import */ var _map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3998);
@@ -1577,6 +2321,7 @@ function defaultEndAngle(d) {
 /***/ 3998:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "O": () => (/* binding */ prefix),
 /* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1663,6 +2408,7 @@ function map(object, f) {
 /***/ 9226:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3998);
 
 
@@ -1744,6 +2490,7 @@ function setMap(map, key, value) {
 /***/ 7719:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3998);
 
 
@@ -1791,6 +2538,7 @@ function set(object, f) {
 /***/ 6372:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "B8": () => (/* binding */ rgb),
 /* harmony export */   "ZP": () => (/* binding */ color)
@@ -2175,6 +2923,7 @@ function hsl2rgb(h, m1, m2) {
 /***/ 4087:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "l": () => (/* binding */ extend)
@@ -2196,6 +2945,7 @@ function extend(parent, definition) {
 /***/ 9229:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony export slice */
 var array = Array.prototype;
 
@@ -2207,6 +2957,7 @@ var slice = array.slice;
 /***/ 9955:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9229);
 
@@ -2419,6 +3170,7 @@ var cases = (/* unused pure expression or super */ null && ([
 /***/ 3650:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9229);
 /* harmony import */ var _contours__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9955);
@@ -2562,6 +3314,7 @@ function defaultWeight() {
 /***/ 2833:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _contours__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9955);
 /* harmony import */ var _density__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3650);
 
@@ -2573,6 +3326,7 @@ function defaultWeight() {
 /***/ 2626:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -2667,6 +3421,7 @@ function set(type, name, callback) {
 /***/ 8716:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "tw": () => (/* binding */ cubicInOut)
 /* harmony export */ });
@@ -2689,6 +3444,7 @@ function cubicInOut(t) {
 /***/ 5224:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _link__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8571);
 /* harmony import */ var _manyBody__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3231);
 /* harmony import */ var _simulation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3238);
@@ -2707,6 +3463,7 @@ function cubicInOut(t) {
 /***/ 8571:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var d3_collection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2300);
 
 
@@ -2831,6 +3588,7 @@ function find(nodeById, nodeId) {
 /***/ 3231:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _simulation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3238);
 
 
@@ -2953,6 +3711,7 @@ function find(nodeById, nodeId) {
 /***/ 3238:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports x, y */
 /* harmony import */ var d3_collection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2300);
 
@@ -3113,6 +3872,7 @@ var initialRadius = 10,
 /***/ 9885:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "t": () => (/* binding */ basis)
@@ -3143,6 +3903,7 @@ function basis(t1, v0, v1, v2, v3) {
 /***/ 5692:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -3167,6 +3928,7 @@ function basis(t1, v0, v1, v2, v3) {
 /***/ 5910:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ZP": () => (/* binding */ nogamma),
 /* harmony export */   "yi": () => (/* binding */ gamma)
@@ -3209,6 +3971,7 @@ function nogamma(a, b) {
 /***/ 5302:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -3224,6 +3987,7 @@ function nogamma(a, b) {
 /***/ 3626:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -3239,6 +4003,7 @@ function nogamma(a, b) {
 /***/ 3414:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ZP": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -3309,6 +4074,7 @@ var rgbBasisClosed = rgbSpline(_basisClosed_js__WEBPACK_IMPORTED_MODULE_3__/* ["
 /***/ 9843:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -3384,6 +4150,7 @@ function one(b) {
 /***/ 6511:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "y": () => (/* binding */ identity)
@@ -3421,6 +4188,7 @@ var identity = {
 /***/ 6697:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Y": () => (/* binding */ interpolateTransformCss),
 /* harmony export */   "w": () => (/* binding */ interpolateTransformSvg)
@@ -3497,6 +4265,7 @@ var interpolateTransformSvg = interpolateTransform(_parse_js__WEBPACK_IMPORTED_M
 /***/ 2490:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "X": () => (/* binding */ parseSvg),
 /* harmony export */   "z": () => (/* binding */ parseCss)
@@ -3534,6 +4303,7 @@ function parseSvg(value) {
 /***/ 9441:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _defaultSource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2763);
 /* harmony import */ var _irwinHall__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4646);
 
@@ -3558,6 +4328,7 @@ function parseSvg(value) {
 /***/ 2763:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -3571,6 +4342,7 @@ function parseSvg(value) {
 /***/ 4807:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _defaultSource__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2763);
 
 
@@ -3592,6 +4364,7 @@ function parseSvg(value) {
 /***/ 1638:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _uniform__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5697);
 /* harmony import */ var _normal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8972);
 /* harmony import */ var _logNormal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(405);
@@ -3611,6 +4384,7 @@ function parseSvg(value) {
 /***/ 4646:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -3636,6 +4410,7 @@ function parseSvg(value) {
 /***/ 405:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _defaultSource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2763);
 /* harmony import */ var _normal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8972);
 
@@ -3660,6 +4435,7 @@ function parseSvg(value) {
 /***/ 8972:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -3699,6 +4475,7 @@ function parseSvg(value) {
 /***/ 5697:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _defaultSource__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2763);
 
 
@@ -3724,6 +4501,7 @@ function parseSvg(value) {
 /***/ 4057:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports map, slice */
 var array = Array.prototype;
 
@@ -3736,6 +4514,7 @@ var slice = array.slice;
 /***/ 9649:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports default, point */
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _ordinal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7603);
@@ -3846,6 +4625,7 @@ function point() {
 /***/ 5236:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports identity, copy, transformer, default */
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4057);
@@ -3980,6 +4760,7 @@ function continuous(transform, untransform) {
 /***/ 4547:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports default, divergingLog, divergingSymlog, divergingPow, divergingSqrt */
 /* harmony import */ var _continuous__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5236);
 /* harmony import */ var _linear__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(289);
@@ -4085,6 +4866,7 @@ function divergingSqrt() {
 /***/ 9898:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony export default */
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4057);
 /* harmony import */ var _linear__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(289);
@@ -4124,6 +4906,7 @@ function identity(domain) {
 /***/ 5315:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _band__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9649);
 /* harmony import */ var _identity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9898);
 /* harmony import */ var _linear__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(289);
@@ -4178,6 +4961,7 @@ function identity(domain) {
 /***/ 289:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports linearish, default */
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _continuous__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5236);
@@ -4261,6 +5045,7 @@ function linear() {
 /***/ 2685:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports loggish, default */
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _continuous__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5236);
@@ -4416,6 +5201,7 @@ function log() {
 /***/ 7603:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports implicit, default */
 /* harmony import */ var d3_collection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2300);
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4057);
@@ -4471,6 +5257,7 @@ function ordinal() {
 /***/ 5128:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports powish, default, sqrt */
 /* harmony import */ var _linear__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(289);
 /* harmony import */ var _continuous__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5236);
@@ -4531,6 +5318,7 @@ function sqrt() {
 /***/ 2110:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony export default */
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4057);
@@ -4599,6 +5387,7 @@ function quantile() {
 /***/ 6602:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony export default */
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4057);
@@ -4667,6 +5456,7 @@ function quantize() {
 /***/ 4250:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports copy, default, sequentialLog, sequentialSymlog, sequentialPow, sequentialSqrt */
 /* harmony import */ var _continuous__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5236);
 /* harmony import */ var _linear__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(289);
@@ -4775,6 +5565,7 @@ function sequentialSqrt() {
 /***/ 9313:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony export default */
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _continuous__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5236);
@@ -4815,6 +5606,7 @@ function sequentialQuantile() {
 /***/ 5437:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports symlogish, default */
 /* harmony import */ var _linear__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(289);
 /* harmony import */ var _continuous__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5236);
@@ -4860,6 +5652,7 @@ function symlog() {
 /***/ 6297:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony export default */
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4057);
@@ -4910,6 +5703,7 @@ function threshold() {
 /***/ 7197:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 
 
@@ -4947,6 +5741,7 @@ function threshold() {
 /***/ 8383:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony export calendar */
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(91);
 /* harmony import */ var _array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4057);
@@ -5093,6 +5888,7 @@ function calendar(year, month, week, day, hour, minute, second, millisecond, for
 /***/ 819:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8383);
 
 
@@ -5109,6 +5905,7 @@ function calendar(year, month, week, day, hour, minute, second, millisecond, for
 /***/ 9077:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5124,6 +5921,7 @@ function calendar(year, month, week, day, hour, minute, second, millisecond, for
 /***/ 789:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5161,6 +5959,7 @@ function creatorFixed(fullname) {
 /***/ 9825:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Ys": () => (/* reexport safe */ _select__WEBPACK_IMPORTED_MODULE_0__.Z)
 /* harmony export */ });
@@ -5190,6 +5989,7 @@ function creatorFixed(fullname) {
 /***/ 3083:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5205,6 +6005,7 @@ function creatorFixed(fullname) {
 /***/ 3888:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5223,6 +6024,7 @@ function creatorFixed(fullname) {
 /***/ 1986:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "P": () => (/* binding */ xhtml),
 /* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -5243,6 +6045,7 @@ var xhtml = "http://www.w3.org/1999/xhtml";
 /***/ 4017:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5261,6 +6064,7 @@ var xhtml = "http://www.w3.org/1999/xhtml";
 /***/ 9911:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5280,6 +6084,7 @@ var xhtml = "http://www.w3.org/1999/xhtml";
 /***/ 1033:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5348,6 +6153,7 @@ function attrFunctionNS(fullname, value) {
 /***/ 7124:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5364,6 +6170,7 @@ function attrFunctionNS(fullname, value) {
 /***/ 6198:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5449,6 +6256,7 @@ function classedFunction(names, value) {
 /***/ 9397:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5472,6 +6280,7 @@ function selection_cloneDeep() {
 /***/ 8650:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5603,6 +6412,7 @@ function bindKey(parent, group, enter, update, exit, data, key) {
 /***/ 4391:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5618,6 +6428,7 @@ function bindKey(parent, group, enter, update, exit, data, key) {
 /***/ 5362:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5663,6 +6474,7 @@ function dispatchFunction(type, params) {
 /***/ 8358:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5683,6 +6495,7 @@ function dispatchFunction(type, params) {
 /***/ 4670:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5696,6 +6509,7 @@ function dispatchFunction(type, params) {
 /***/ 8737:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "F": () => (/* binding */ EnterNode),
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
@@ -5731,6 +6545,7 @@ EnterNode.prototype = {
 /***/ 2978:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5749,6 +6564,7 @@ EnterNode.prototype = {
 /***/ 4652:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5777,6 +6593,7 @@ EnterNode.prototype = {
 /***/ 5267:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5812,6 +6629,7 @@ function htmlFunction(value) {
 /***/ 3933:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Jz": () => (/* binding */ root),
 /* harmony export */   "Y1": () => (/* binding */ Selection),
@@ -5934,6 +6752,7 @@ Selection.prototype = selection.prototype = {
 /***/ 1053:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5960,6 +6779,7 @@ function constantNull() {
 /***/ 2105:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5977,6 +6797,7 @@ function constantNull() {
 /***/ 8275:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -5994,6 +6815,7 @@ function lower() {
 /***/ 8244:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6023,6 +6845,7 @@ function lower() {
 /***/ 9317:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6044,6 +6867,7 @@ function lower() {
 /***/ 8098:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6059,6 +6883,7 @@ function lower() {
 /***/ 5109:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ZP": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6177,6 +7002,7 @@ function customEvent(event1, listener, that, args) {
 /***/ 8221:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6200,6 +7026,7 @@ function customEvent(event1, listener, that, args) {
 /***/ 9152:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6238,6 +7065,7 @@ function propertyFunction(name, value) {
 /***/ 1242:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6255,6 +7083,7 @@ function raise() {
 /***/ 1261:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6273,6 +7102,7 @@ function remove() {
 /***/ 4958:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6302,6 +7132,7 @@ function remove() {
 /***/ 1344:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6331,6 +7162,7 @@ function remove() {
 /***/ 3912:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6346,6 +7178,7 @@ function remove() {
 /***/ 2322:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6381,6 +7214,7 @@ function ascending(a, b) {
 /***/ 327:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6394,6 +7228,7 @@ function ascending(a, b) {
 /***/ 9986:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "S": () => (/* binding */ styleValue),
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
@@ -6441,6 +7276,7 @@ function styleValue(node, name) {
 /***/ 7647:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6476,6 +7312,7 @@ function textFunction(value) {
 /***/ 2634:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6493,6 +7330,7 @@ function none() {}
 /***/ 3545:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6512,6 +7350,7 @@ function empty() {
 /***/ 5021:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6527,6 +7366,7 @@ function empty() {
 /***/ 4042:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6549,6 +7389,7 @@ function empty() {
 /***/ 5374:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "B7": () => (/* binding */ Timer),
 /* harmony export */   "HT": () => (/* binding */ timer),
@@ -6673,6 +7514,7 @@ function sleep(time) {
 /***/ 2946:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _transition_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8023);
 /* harmony import */ var _transition_schedule_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8529);
 
@@ -6703,6 +7545,7 @@ var root = (/* unused pure expression or super */ null && ([null]));
 /***/ 2263:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _selection_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2901);
 /* harmony import */ var _transition_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8023);
 /* harmony import */ var _active_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2946);
@@ -6718,6 +7561,7 @@ var root = (/* unused pure expression or super */ null && ([null]));
 /***/ 7811:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6753,6 +7597,7 @@ var root = (/* unused pure expression or super */ null && ([null]));
 /***/ 2901:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var d3_selection__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3933);
 /* harmony import */ var _interrupt_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5428);
 /* harmony import */ var _transition_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4341);
@@ -6769,6 +7614,7 @@ d3_selection__WEBPACK_IMPORTED_MODULE_2__/* ["default"].prototype.transition */ 
 /***/ 5428:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6787,6 +7633,7 @@ d3_selection__WEBPACK_IMPORTED_MODULE_2__/* ["default"].prototype.transition */ 
 /***/ 4341:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6843,6 +7690,7 @@ function inherit(node, id) {
 /***/ 3874:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6935,6 +7783,7 @@ function attrFunctionNS(fullname, interpolate, value) {
 /***/ 8180:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -6990,6 +7839,7 @@ function attrTween(name, value) {
 /***/ 8836:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7024,6 +7874,7 @@ function delayConstant(id, value) {
 /***/ 4712:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7058,6 +7909,7 @@ function durationConstant(id, value) {
 /***/ 5439:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7085,6 +7937,7 @@ function easeConstant(id, value) {
 /***/ 1128:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7122,6 +7975,7 @@ function easeConstant(id, value) {
 /***/ 1236:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7150,6 +8004,7 @@ function easeConstant(id, value) {
 /***/ 8023:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "pZ": () => (/* binding */ newId),
 /* harmony export */   "uT": () => (/* binding */ Transition)
@@ -7250,6 +8105,7 @@ Transition.prototype = transition.prototype = {
 /***/ 675:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7274,6 +8130,7 @@ Transition.prototype = transition.prototype = {
 /***/ 1444:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7304,6 +8161,7 @@ Transition.prototype = transition.prototype = {
 /***/ 1730:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7347,6 +8205,7 @@ function onFunction(id, name, listener) {
 /***/ 6696:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7368,6 +8227,7 @@ function removeFunction(id) {
 /***/ 8529:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "KE": () => (/* binding */ STARTING),
 /* harmony export */   "Ku": () => (/* binding */ ENDED),
@@ -7541,6 +8401,7 @@ function create(node, id, self) {
 /***/ 5492:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7576,6 +8437,7 @@ function create(node, id, self) {
 /***/ 7256:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7615,6 +8477,7 @@ function create(node, id, self) {
 /***/ 1751:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7633,6 +8496,7 @@ var Selection = d3_selection__WEBPACK_IMPORTED_MODULE_0__/* ["default"].prototyp
 /***/ 6796:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7728,6 +8592,7 @@ function styleMaybeRemove(id, name) {
 /***/ 7179:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7762,6 +8627,7 @@ function styleTween(name, value, priority) {
 /***/ 4763:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7793,6 +8659,7 @@ function textFunction(value) {
 /***/ 4685:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7827,6 +8694,7 @@ function textTween(value) {
 /***/ 302:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
@@ -7863,6 +8731,7 @@ function textTween(value) {
 /***/ 6314:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "x": () => (/* binding */ tweenValue)
@@ -7956,6 +8825,7 @@ function tweenValue(transition, name, value) {
 /***/ 6629:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "T": () => (/* binding */ removeBeach),
 /* harmony export */   "W": () => (/* binding */ addBeach)
@@ -8165,6 +9035,7 @@ function rightBreakPoint(arc, directrix) {
 /***/ 2012:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "A1": () => (/* binding */ sortCellHalfedges),
 /* harmony export */   "BO": () => (/* binding */ cellHalfedgeStart),
@@ -8307,6 +9178,7 @@ function clipCells(x0, y0, x1, y1) {
 /***/ 8473:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "No": () => (/* binding */ detachCircle),
 /* harmony export */   "Z6": () => (/* binding */ attachCircle),
@@ -8399,6 +9271,7 @@ function detachCircle(arc) {
 /***/ 2119:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "$Y": () => (/* binding */ edges),
 /* harmony export */   "Ho": () => (/* binding */ epsilon),
@@ -8562,6 +9435,7 @@ Diagram.prototype = {
 /***/ 364:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "FK": () => (/* binding */ setEdgeEnd),
 /* harmony export */   "UV": () => (/* binding */ createBorderEdge),
@@ -8744,6 +9618,7 @@ function clipEdges(x0, y0, x1, y1) {
 /***/ 1791:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__),
 /* harmony export */   "q": () => (/* binding */ RedBlackNode)
@@ -8992,6 +9867,7 @@ function RedBlackFirst(node) {
 /***/ 5117:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _voronoi__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1122);
 
 
@@ -9001,6 +9877,7 @@ function RedBlackFirst(node) {
 /***/ 1122:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _Diagram__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2119);
 
 
@@ -9057,6 +9934,7 @@ function RedBlackFirst(node) {
 /***/ 9750:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var _zoom_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5115);
 /* harmony import */ var _transform_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4905);
 
@@ -9068,6 +9946,7 @@ function RedBlackFirst(node) {
 /***/ 4905:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports Transform, identity, default */
 function Transform(k, x, y) {
   this.k = k;
@@ -9127,6 +10006,7 @@ function transform(node) {
 /***/ 5115:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony import */ var d3_transition__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2263);
 /* harmony import */ var _transform_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4905);
 
@@ -9555,6 +10435,7 @@ function defaultConstrain(transform, extent, translateExtent) {
 /***/ 2156:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* unused harmony exports name, version, description, keywords, homepage, license, author, main, unpkg, jsdelivr, module, repository, files, scripts, devDependencies, dependencies */
 var name = "d3";
 var version = "5.12.0";
@@ -9579,6 +10460,7 @@ var dependencies = {"d3-array":"1","d3-axis":"1","d3-brush":"1","d3-chord":"1","
 /***/ 662:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Ys": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.Ys)
 /* harmony export */ });
@@ -9632,9 +10514,24 @@ var dependencies = {"d3-array":"1","d3-axis":"1","d3-brush":"1","d3-chord":"1","
 
 /***/ }),
 
+/***/ 9665:
+/***/ (function(module) {
+
+!function(t,e){ true?module.exports=e():0}(this,(function(){"use strict";var t=1e3,e=6e4,n=36e5,r="millisecond",i="second",s="minute",u="hour",a="day",o="week",f="month",h="quarter",c="year",d="date",$="Invalid Date",l=/^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/,y=/\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g,M={name:"en",weekdays:"Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),months:"January_February_March_April_May_June_July_August_September_October_November_December".split("_")},m=function(t,e,n){var r=String(t);return!r||r.length>=e?t:""+Array(e+1-r.length).join(n)+t},g={s:m,z:function(t){var e=-t.utcOffset(),n=Math.abs(e),r=Math.floor(n/60),i=n%60;return(e<=0?"+":"-")+m(r,2,"0")+":"+m(i,2,"0")},m:function t(e,n){if(e.date()<n.date())return-t(n,e);var r=12*(n.year()-e.year())+(n.month()-e.month()),i=e.clone().add(r,f),s=n-i<0,u=e.clone().add(r+(s?-1:1),f);return+(-(r+(n-i)/(s?i-u:u-i))||0)},a:function(t){return t<0?Math.ceil(t)||0:Math.floor(t)},p:function(t){return{M:f,y:c,w:o,d:a,D:d,h:u,m:s,s:i,ms:r,Q:h}[t]||String(t||"").toLowerCase().replace(/s$/,"")},u:function(t){return void 0===t}},v="en",D={};D[v]=M;var p=function(t){return t instanceof _},S=function t(e,n,r){var i;if(!e)return v;if("string"==typeof e){var s=e.toLowerCase();D[s]&&(i=s),n&&(D[s]=n,i=s);var u=e.split("-");if(!i&&u.length>1)return t(u[0])}else{var a=e.name;D[a]=e,i=a}return!r&&i&&(v=i),i||!r&&v},w=function(t,e){if(p(t))return t.clone();var n="object"==typeof e?e:{};return n.date=t,n.args=arguments,new _(n)},O=g;O.l=S,O.i=p,O.w=function(t,e){return w(t,{locale:e.$L,utc:e.$u,x:e.$x,$offset:e.$offset})};var _=function(){function M(t){this.$L=S(t.locale,null,!0),this.parse(t)}var m=M.prototype;return m.parse=function(t){this.$d=function(t){var e=t.date,n=t.utc;if(null===e)return new Date(NaN);if(O.u(e))return new Date;if(e instanceof Date)return new Date(e);if("string"==typeof e&&!/Z$/i.test(e)){var r=e.match(l);if(r){var i=r[2]-1||0,s=(r[7]||"0").substring(0,3);return n?new Date(Date.UTC(r[1],i,r[3]||1,r[4]||0,r[5]||0,r[6]||0,s)):new Date(r[1],i,r[3]||1,r[4]||0,r[5]||0,r[6]||0,s)}}return new Date(e)}(t),this.$x=t.x||{},this.init()},m.init=function(){var t=this.$d;this.$y=t.getFullYear(),this.$M=t.getMonth(),this.$D=t.getDate(),this.$W=t.getDay(),this.$H=t.getHours(),this.$m=t.getMinutes(),this.$s=t.getSeconds(),this.$ms=t.getMilliseconds()},m.$utils=function(){return O},m.isValid=function(){return!(this.$d.toString()===$)},m.isSame=function(t,e){var n=w(t);return this.startOf(e)<=n&&n<=this.endOf(e)},m.isAfter=function(t,e){return w(t)<this.startOf(e)},m.isBefore=function(t,e){return this.endOf(e)<w(t)},m.$g=function(t,e,n){return O.u(t)?this[e]:this.set(n,t)},m.unix=function(){return Math.floor(this.valueOf()/1e3)},m.valueOf=function(){return this.$d.getTime()},m.startOf=function(t,e){var n=this,r=!!O.u(e)||e,h=O.p(t),$=function(t,e){var i=O.w(n.$u?Date.UTC(n.$y,e,t):new Date(n.$y,e,t),n);return r?i:i.endOf(a)},l=function(t,e){return O.w(n.toDate()[t].apply(n.toDate("s"),(r?[0,0,0,0]:[23,59,59,999]).slice(e)),n)},y=this.$W,M=this.$M,m=this.$D,g="set"+(this.$u?"UTC":"");switch(h){case c:return r?$(1,0):$(31,11);case f:return r?$(1,M):$(0,M+1);case o:var v=this.$locale().weekStart||0,D=(y<v?y+7:y)-v;return $(r?m-D:m+(6-D),M);case a:case d:return l(g+"Hours",0);case u:return l(g+"Minutes",1);case s:return l(g+"Seconds",2);case i:return l(g+"Milliseconds",3);default:return this.clone()}},m.endOf=function(t){return this.startOf(t,!1)},m.$set=function(t,e){var n,o=O.p(t),h="set"+(this.$u?"UTC":""),$=(n={},n[a]=h+"Date",n[d]=h+"Date",n[f]=h+"Month",n[c]=h+"FullYear",n[u]=h+"Hours",n[s]=h+"Minutes",n[i]=h+"Seconds",n[r]=h+"Milliseconds",n)[o],l=o===a?this.$D+(e-this.$W):e;if(o===f||o===c){var y=this.clone().set(d,1);y.$d[$](l),y.init(),this.$d=y.set(d,Math.min(this.$D,y.daysInMonth())).$d}else $&&this.$d[$](l);return this.init(),this},m.set=function(t,e){return this.clone().$set(t,e)},m.get=function(t){return this[O.p(t)]()},m.add=function(r,h){var d,$=this;r=Number(r);var l=O.p(h),y=function(t){var e=w($);return O.w(e.date(e.date()+Math.round(t*r)),$)};if(l===f)return this.set(f,this.$M+r);if(l===c)return this.set(c,this.$y+r);if(l===a)return y(1);if(l===o)return y(7);var M=(d={},d[s]=e,d[u]=n,d[i]=t,d)[l]||1,m=this.$d.getTime()+r*M;return O.w(m,this)},m.subtract=function(t,e){return this.add(-1*t,e)},m.format=function(t){var e=this,n=this.$locale();if(!this.isValid())return n.invalidDate||$;var r=t||"YYYY-MM-DDTHH:mm:ssZ",i=O.z(this),s=this.$H,u=this.$m,a=this.$M,o=n.weekdays,f=n.months,h=function(t,n,i,s){return t&&(t[n]||t(e,r))||i[n].slice(0,s)},c=function(t){return O.s(s%12||12,t,"0")},d=n.meridiem||function(t,e,n){var r=t<12?"AM":"PM";return n?r.toLowerCase():r},l={YY:String(this.$y).slice(-2),YYYY:this.$y,M:a+1,MM:O.s(a+1,2,"0"),MMM:h(n.monthsShort,a,f,3),MMMM:h(f,a),D:this.$D,DD:O.s(this.$D,2,"0"),d:String(this.$W),dd:h(n.weekdaysMin,this.$W,o,2),ddd:h(n.weekdaysShort,this.$W,o,3),dddd:o[this.$W],H:String(s),HH:O.s(s,2,"0"),h:c(1),hh:c(2),a:d(s,u,!0),A:d(s,u,!1),m:String(u),mm:O.s(u,2,"0"),s:String(this.$s),ss:O.s(this.$s,2,"0"),SSS:O.s(this.$ms,3,"0"),Z:i};return r.replace(y,(function(t,e){return e||l[t]||i.replace(":","")}))},m.utcOffset=function(){return 15*-Math.round(this.$d.getTimezoneOffset()/15)},m.diff=function(r,d,$){var l,y=O.p(d),M=w(r),m=(M.utcOffset()-this.utcOffset())*e,g=this-M,v=O.m(this,M);return v=(l={},l[c]=v/12,l[f]=v,l[h]=v/3,l[o]=(g-m)/6048e5,l[a]=(g-m)/864e5,l[u]=g/n,l[s]=g/e,l[i]=g/t,l)[y]||g,$?v:O.a(v)},m.daysInMonth=function(){return this.endOf(f).$D},m.$locale=function(){return D[this.$L]},m.locale=function(t,e){if(!t)return this.$L;var n=this.clone(),r=S(t,e,!0);return r&&(n.$L=r),n},m.clone=function(){return O.w(this.$d,this)},m.toDate=function(){return new Date(this.valueOf())},m.toJSON=function(){return this.isValid()?this.toISOString():null},m.toISOString=function(){return this.$d.toISOString()},m.toString=function(){return this.$d.toUTCString()},M}(),T=_.prototype;return w.prototype=T,[["$ms",r],["$s",i],["$m",s],["$H",u],["$W",a],["$M",f],["$y",c],["$D",d]].forEach((function(t){T[t[1]]=function(e){return this.$g(e,t[0],t[1])}})),w.extend=function(t,e){return t.$i||(t(e,_,w),t.$i=!0),w},w.locale=S,w.isDayjs=p,w.unix=function(t){return w(1e3*t)},w.en=D[v],w.Ls=D,w.p={},w}));
+
+/***/ }),
+
+/***/ 5709:
+/***/ (function(module) {
+
+!function(e,t){ true?module.exports=t():0}(this,(function(){"use strict";return function(e,t){t.prototype.isLeapYear=function(){return this.$y%4==0&&this.$y%100!=0||this.$y%400==0}}}));
+
+/***/ }),
+
 /***/ 6738:
 /***/ ((module) => {
 
+"use strict";
 module.exports = Function('return this')();
 
 /***/ })
@@ -9659,13 +10556,25 @@ module.exports = Function('return this')();
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -9696,8 +10605,9 @@ module.exports = Function('return this')();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)

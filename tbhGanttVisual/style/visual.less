@@ -1,7 +1,7 @@
 /* -------- VAR -------- */
 :root {
     --rowHeight: 20px;
-    --timelineHeight: 40px;
+    --timelineHeight: 80px;
 
     //the horizontal portion of the container that should be 
     //taken up by the gantt chart
@@ -10,6 +10,7 @@
 }
 
 /*begin css reset*/
+
 body {
     line-height: 1;
 }
@@ -47,15 +48,15 @@ body {
 /* -------- DIV -------- */
 
 div {
-    border: 1px dashed black;
     padding: 0px;
     margin: 0px;
     width: 100%;
+
+    //border: 1px dashed black;
 }
 
 //div for the header of the graph: title, logo etc.
 #div-header {
-    // height: 10%;
     min-height: 30px;
 
     border-style: none none solid none;
@@ -65,70 +66,75 @@ div {
 
 //div that handles the overlapping of the content and status line. Grid.
 #div-statusAndContent {
-    display: grid;
-    grid-template-columns: calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
-    //grid-template-rows: 1fr 1fr;
-
     height: fit-content;
+
+    display: grid;
+    grid-template-columns: 25fr 75fr; //calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
+    //why doesnt the above commented code work?
+    //grid-template-rows: 1fr 1fr;
 }
 
 //div for the task headers and timeline
-#div-timelineAndTasksHeader {
-    height: fit-content;
-    display: flex;
+#div-timelineAndActivitiesHeader {
+    height: var(--timelineHeight);
 
     grid-row-start: 1;
-    grid-column-start: 1;
     grid-row-end: span 1;
+    grid-column-start: 1;
     grid-column-end: span 2;
+
+    display: flex;
+    justify-content: flex-end;
 }
 
 //the div below the above div that contains the tasks table and gantt
 #div-content {
     height: fit-content;
-    display: flex;
-    justify-content: flex-end;
 
     grid-row-start: 2;
-    grid-column-start: 1;
     grid-row-end: span 1;
+    grid-column-start: 1;
     grid-column-end: span 2;
-}
 
+    display: flex;
+    justify-content: flex-end;
+}
 
 //div that contains the status line and accompanying text.
 //Overlaps gantt and timeline but is one level up in the DOM heirachy,
 #div-statusLine {
-    grid-row-start: 1;
-    grid-column-start: 2;
-    grid-row-end: span 2;
-    grid-column-end: span 1;
-
     height: 100%;
     z-index: 1;
 
+    grid-row-start: 1;
+    grid-row-end: span 2;
+    grid-column-start: 2;
+    grid-column-end: span 1;
+
+    pointer-events: none;
 }
 
-#div-tasks {
+//div that contains the activities table
+#div-activities {
     width: 25%;
     flex-shrink: 0;
+    overflow-x: scroll;
 }
 
 #div-chartContainer {
-    width:var(--chartPortionPct);
-
-    display: grid;
-    grid-template-columns: 1fr;
+    width: var(--chartPortionPct);
+    height: fit-content;
     border-style: none none none solid;
     border-width: 2px;
     border-color: black;
 
-    height: 500px;
+    display: grid;
+    grid-template-columns: 1fr;
 }
 
 //https://ishadeed.com/article/less-absolute-positioning-modern-css/
 //use grids, not absolutes!
-
+//stacks the element on row 1 col 1 of the grid
 .gridStack {
     //grid-area: 1 / 2; //can '2' be dynamic? Will fail if  2 =/= no. of grid items.
     //didnt get the above syntax to work...longhand it is.
@@ -142,7 +148,6 @@ div {
     height: 100%;
     display: flex;
     flex-direction: column;
-    height: fit-content;
 }
 
 #div-svgLayer {
@@ -163,15 +168,18 @@ div {
 //     z-index: 2;
 // }
 
-
 #div-timeline {
-    height: var(--timelineHeight);
+    height: 100%;
 
+    width: 75%;
+    overflow-x: scroll;
+    overflow-y: clip;
 }
 
 #div-chart {
     height: fit-content;
     min-height: 150px;
+
     flex-grow: 1;
     position: relative;
 }
@@ -183,8 +191,15 @@ table {
     border: 1px solid blue;
 }
 
+#table-activityHeader {
+    width: 25%;
+    color: #bbbbbb;
+    flex-shrink: 0
+}
+
 th {
     height: var(--timelineHeight);
+    ;
 }
 
 tr {
@@ -192,6 +207,8 @@ tr {
 }
 
 td {
+    min-width: 40px;
+
     border: 1px #aaaaaa;
     border-style: solid none solid solid;
 }
@@ -202,20 +219,41 @@ td {
 
 /* ------- TIMELINE ------- */
 
+//check these
 #svg-statusLine {
     z-index: 3;
 }
 
 #statusLine {
-    stroke: rgb(255, 0, 0);
+    stroke: rgb(0, 255, 255);
     stroke-width: 2px;
 }
 
+.g-tl{
+    border: 1px solid black;
+    //color:#00ff00;
+}
 
+/* ------- CHART ------- */
+
+.activityBar {
+
+    fill: red;
+    stroke: black;
+    stroke-width: 1px;
+}
 
 /* ------- DEBUG ------- */
 
 .highlight {
-    border: 1px solid #00ff00;
     background-color: rgba(0, 255, 0, 0.25);
+    border: 1px solid #00ff00;
+}
+
+.style1{
+    padding-left: 0px;
+}
+
+.style2{
+    padding-left: 5px;
 }
